@@ -1,0 +1,105 @@
+<!--navbar-->
+<nav class="navbar navbar-inverse navbar-static-top col-xs-12">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+
+            </button>
+            <img class="navbar-brand pull-left" width="100" height="200" src="image/logo/logo.png"/>                
+        </div>
+    </div>
+</nav>
+
+
+<div id="backgruondImageLogIn">
+    <content>
+        
+        <div class="row">
+            <div class="col-xs-3"></div>
+            <div class="col-xs-6">
+                <!-- a form for the user to enter the website-->
+                <form class="form-group" ng-submit="logIn()">
+                    <label>E-mail :</label>
+                    <input class="form-control" type="email" placeholder="enter E-mail" required="" ng-model="userEmail" />
+                    <br/>
+                    <br/>
+                    <label>password :</label>
+                    <input class="form-control" type="password" placeholder="enter passsword" required="" ng-model="userPassword" />
+                    <a id="forgatPasswordBtn" class="btn" ng-click="forgatPasswordDivFunc()">forgat password ? </a>
+                    <br/>
+                    <br/>
+                    <input type="submit" class="form-control" value="log-In"/>
+
+                </form>
+                <!--note if Email or password is incorrect-->
+                <div class="divNeedTextCenterAndColorRed">
+                    <h1 ng-show="userNotExist">E-mail or password is incorrect</h1>
+                </div>
+            </div>
+            <div class="col-xs-3"></div>
+        </div>
+        <br/>
+        
+        <!--use forgat password -->
+        <div class="row">
+            <div class="col-xs-4"></div>
+            <div id="forgatPasswordDiv" class="col-xs-4">
+                <div ng-show="fillDetailsform">
+                    <!--form to get all the details from the user about his account-->
+                    <form class="form-control" ng-submit="userForgatPasswordFormSubmit()">
+                        <label>First Name</label>
+                        <input class="form-control" type="text" placeholder="israel" required ng-model="userForgatPassword.firstName" />
+                        <br/>
+                        <br/>
+                        <label>Last Name</label>
+                        <input class="form-control" type="text" placeholder="israeli" required ng-model="userForgatPassword.lastName" />
+                        <br/>
+                        <br/>
+                        <label>Phone Number</label>
+                        <input class="form-control" type="text" placeholder="05-XXXXXXXX" required ng-model="userForgatPassword.phone" />
+                        <br/>
+                        <br/>
+                        <label>E-mail :</label>
+                        <input class="form-control" type="email" placeholder="XX@XX.XX" required ng-model="userForgatPassword.email" />
+                        <br/>
+                        <br/>
+                        <input class="form-control btn-primary" type="submit" value="submit"/>
+
+                        <div class="divNeedTextCenterAndColorRed">
+                            <h1 ng-show="ForgatPasswordUserNotExist">user does not exists</h1>
+                        </div>
+                    </form>
+                </div><!-- <div ng-show="fillDetailsform">-->
+
+                <!--form to enter a new password-->
+                <div ng-show="enterNewPasswordForm">
+                    <form class="form-control" ng-submit="createNewPasswordForUser()">
+                        <div class="divNeedTextCenterAndColorRed">
+                            <img  src="./image/users/{{ForgatPasswordUser.imageFileText}}" height="100" width="100" >
+                        </div>
+                        <br/>
+                        <br/>
+                        <label>Enter New Password</label>
+                        <input class="form-control" type="password" placeholder="XXXXXXX"  pattern=".{6,}" title="the password shuld be at least 6 characters" required ng-model="userForgatPassword.newPassword" />
+                        <br/>
+                        <br/>
+                        <input class="form-control btn-primary" type="submit" value="submit"/>
+                    </form>
+                </div><!--<div ng-show="enterNewPasswordForm">-->
+                <br/>
+                
+                <!--a note for password created-->
+                <div class="divNeedTextCenterAndColorRed">
+                    <h1 ng-show="newPasswordCreate">new password create</h1>
+                </div>
+            </div><!--<div id="forgatPasswordDiv" class="col-xs-4">-->
+            <div class="col-xs-4"></div>
+
+        </div><!-- <div class="row">-->
+    </content>
+</div>
+

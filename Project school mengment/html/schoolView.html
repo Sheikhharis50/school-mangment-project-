@@ -1,0 +1,372 @@
+<!--navbar -->
+<div class="container-fluid">
+
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Menu</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://localhost/Project4/index.php#!/school">school</a></li>
+                    <li ng-show="isManger"><a ng-href="http://localhost/Project4/index.php#!/administration">administration</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="logOutNav">
+                        <p>{{user.firstName}} {{user.lastName}},&nbsp;{{user.role}}</p>
+                        <button class="pull-right" ng-click="logout()">log-out</button>
+                    </li>
+                    <li>
+                        <img ng-src="./image/users/{{user.imageFileText}}" height="50" width="50" id="userImage">
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </nav>
+</div>
+
+<content>
+    <div class="row">
+
+        <!--left part of the screen (student list and courses list )-->
+        <div id="lefttCotentDivSchool" class="col-xs-12 col-sm-4 row">
+            <!--courses header-->
+            <div class="col-xs-6 row">
+                <div class="divNeedTextCenter">
+                    <span>Courses</span>
+                    <a ng-show="isManger"><button class="fa fa-plus-square btnWithImage" ng-click="addNewCourseFunc()"></button></a>
+                    <hr />
+                </div><!--<div class="divNeedTextCenter">-->
+                <!--courses list-->
+                <div ng-repeat="course in courses">
+                    <div class="row divSelectBox" ng-click="userSelectCourseFunc(course.course_id)">
+                        <div class="col-xs-4 pull-left">
+                            <img ng-src="./image/courses/{{course.imageFileName}}" width="50" height="50" />
+                        </div>
+                        <div class="col-xs-8">
+                            <p>{{course.name}}</p>
+                        </div>
+                    </div>
+                </div><!--<div ng-repeat="course in courses">-->
+            </div><!--<div class="col-xs-6 row">-->
+
+
+            <div class="col-xs-6 row">
+                <!--student header-->
+                <div class="divNeedTextCenter">
+                    <span>Students</span>
+                    <a ng-show="isManger"><button class="fa fa-plus-square btnWithImage" ng-click="addNewStudentfunc()"></button></a>
+                    <hr />
+                </div>
+
+                <!--student list-->
+                <div ng-repeat="student in students">
+                    <div class="row divSelectBox" ng-click="studentPage(student.user_id)">
+                        <div class="col-xs-4">
+                            <img ng-src="./image/users/{{student.imageFileText}}" width="50" height="50" />
+                        </div>
+                        <div class="col-xs-8 ">
+                            <span>{{student.firstName}}</span>
+                            <span>{{student.lastName}}</span>
+                            <p>{{student.phone}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!--<div id="lefttCotentDivSchool" class="col-xs-12 col-sm-4  pull-left row">-->
+
+
+
+        <!--right content part-->
+        <div id="rightCotentDivSchool" class="col-xs-12 col-sm-8">
+            <br />
+            <br />
+
+            <!--specific pick by the user pages -->
+
+            <!--specific student page -->
+            <div ng-show="studentSelectedDiv" class="row">
+                <div class="col-xs-12">
+                    <!--check if is a manger that can update data-->
+                    <input ng-show="isManger" class="pull-right" type="submit" value="EDIT" ng-click="EditExistStudentFunc(selectedStudent)" />
+                </div>
+                <br />
+                <br />
+                <!--div that contain student information-->
+                <div  class="col-xs-12">
+                    <div class="col-xs-2 pull-left">
+                        <img ng-src="./image/users/{{selectedStudent.imageFileText}}" width="100" height="100" />
+                    </div>
+                    <div class="col-xs-6 pull-left">
+                        <h5> name : {{selectedStudent.firstName}} {{selectedStudent.lastName}}</h5>
+                        <p> E-mail : {{selectedStudent.email}}</p>
+                        <p> Phone : {{selectedStudent.phone}}</p>
+                    </div>
+                    <div class="col-xs-4">
+                    </div>
+                </div>
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <div>
+                    <!-- course list that student take part in -->
+                    <div ng-repeat="course in selectedStudent.courses">
+                        <div class="col-xs-12 selectCoursesInStudentPage">
+                            <div class="col-xs-1">
+                                <img ng-src="./image/courses/{{course.imageFileName}}" width="70" height="70" />
+                            </div>
+                            <div class="col-xs-5">
+                                <h4>{{course.name}}</h4>
+                            </div>
+                            <div class="col-xs-6"></div>
+                        </div>
+                    </div>
+                </div>
+            </div><!--<div ng-show="studentSelectedDiv" class="row">-->
+
+
+            <!--specific course page -->
+            <div ng-show="selectedCourse">
+                <div class="col-xs-12">
+                    <!--check if is a manger that can update data-->
+                    <input ng-show="isManger" class="pull-right" type="submit" value="EDIT" ng-click="openEditCoursFunc()" />
+                </div>
+                <div class="imgDiv">
+                    <img ng-src="./image/courses/{{selectedCourseDetails.imageFileName}}" width="120" height="120" />
+                </div>
+                <div>
+                    <h3>{{selectedCourseDetails.name}} , {{selectedCourseDetails.numberOfStudent}} Student</h3>
+                    <p>{{selectedCourseDetails.description}}</p>
+                </div>
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <!--list of the student that take part of this course -->
+                <div ng-repeat="student in studentTakeCourse">
+                    <div class="imgDiv">
+                        <img ng-src="./image/users/{{student.imageFileText}}" width="50" height="50" />
+                    </div>
+                    <div>
+                        <h5>{{student.firstName}} {{student.lastName}}</h5>
+                        <h5>{{student.phone}}</h5>
+                    </div>
+                    <br />
+                    <br />
+                    <br />
+                </div>
+            </div><!--<div ng-show="selectedCourse">-->
+
+
+            <!--add a new data pages-->
+
+            <!--ADD new student -->
+            <div ng-show="addNewStudent" class="row">
+                <form class="form-group" action="http://localhost/Project4/php/API.php?command=insertNewStudent" method="post" enctype="multipart/form-data">
+                    <div class="col-xs-12">
+                        <!--check if form is ready to send -->
+                        <input type="submit" value="save" ng-show="readyToAddNewStudentNewStudentForm" />
+                    </div>
+                    <br />
+                    <br />
+                    <div class="col-xs-0 col-sm-3"></div>
+                    <div class="col-xs-12 col-sm-6 divNeedTextCenter">
+                        <label>First Name : </label>
+                        <input type="text" class="form-control" placeholder="israel" name="firstName" ng-model="newstudent.firstName" />
+                        <br />
+                        <label>Last Name : </label>
+                        <input type="text" class="form-control" placeholder="israeli" name="lastName" ng-model="newstudent.lastName" />
+                        <br />
+                        <!--enter phone input and validation-->
+                        <label>Phone : </label>
+                        <input ng-hide="PhoneIsGoodNewStudentForm" type="phone" class="form-control" placeholder="05-xxxxxxxx" name="phone" ng-model="newStudentPhone" />
+                        <a class=" btn btn-success" ng-hide="PhoneIsGoodNewStudentForm" ng-click="checkPhoneAvailableNewStudentForm()">check if Phone available</a>
+                        <p ng-show="noPhone" class="PNeedRedColor">please enter a  Phone Number</p>
+                        <p ng-show="PhoneIsInvalidNewStudentForm" class="PNeedRedColor">Phone is invalid</p>
+                        <p ng-show="PhoneIsNotAvailableNewStudentForm" class=" PNeedRedColor">Phone is already in use</p>
+                        <p ng-show="PhoneIsGoodNewStudentForm">{{newStudentPhone}}</p>
+                        <p ng-show="PhoneIsGoodNewStudentForm" class="fa checkSquare">&#xf046</p>
+                        <br />
+                        <!--enter E-mail input and validation-->
+                        <label>E-mail : </label>
+                        <input ng-hide="EmailIsGoodNewStudentForm" type="email" class="form-control" placeholder="XXXX@XXXX.XXX" name="email" ng-model="newStudentEmail" />
+                        <a class="btn btn-success" ng-hide="EmailIsGoodNewStudentForm" ng-click="checkEmailAvailableForNewStudentForm()">check if Email available</a>
+                        <p ng-show="noEmailNewStudentForm" class="PNeedRedColor">please enter E-mail address</p>
+                        <p ng-show="EmailIsInvalidNewStudentForm" class="PNeedRedColor">Email is invalid</p>
+                        <p ng-show="EmailIsNotAvailableNewStudentForm" class="PNeedRedColor">Email is to not available</p>
+                        <p ng-show="EmailIsGoodNewStudentForm">{{newStudentEmail}}</p>
+                        <p ng-show="EmailIsGoodNewStudentForm" class="fa checkSquare">&#xf046</p>
+                        <br />
+
+                        <label>Password : </label>
+                        <input type="password" class="form-control" placeholder="XXXXXX" name="password" pattern=".{6,}" title="the password shuld be at least 6 characters" ng-model="newstudent.password" />
+                        <br />
+
+                        <label>Image : </label>
+                        <input type="file" class="form-control" name="file" accept="image/x-png,image/gif,image/jpeg" required />
+                        <br />
+                        <br />
+                        <h3>courses :</h3>
+                        <br />
+                        <!--list of the courses that user can pick wich curses this student take a part of -->
+                        <div ng-repeat="course in courses">
+                            <div class="row">
+                                <input class="col-xs-1" id="{{course.name}}" type="checkbox" value="{{course.course_id}}" name="check_list[]">
+                                <label class="col-xs-2" for="{{course.name}}">{{course.name}}</label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div><!-- <div ng-show="addNewStudent" class="row">-->
+
+
+            <!--ADD new course -->
+            <div ng-show="addNewCourse" class="row">
+                <form class="form-group" action="http://localhost/Project4/php/API.php?command=insertNewCourse" method="post" enctype="multipart/form-data">
+                    <div class="col-xs-12">
+                        <input type="submit" value="save" />
+                    </div>
+                    <br />
+                    <br />
+                    <div class="col-xs-0 col-sm-3"></div>
+                    <div class="col-xs-12 col-sm-6">
+                        <label>course Name : </label>
+                        <input type="text" class="form-control" name="name" placeholder="course name" required />
+                        <br />
+                        <label>description : </label>
+                        <textarea class="form-control" name="description" rows="5" required></textarea>
+                        <br />
+                        <label>Image : </label>
+                        <input type="file" class="form-control" name="file" accept="image/x-png,image/gif,image/jpeg" requiredng-model="newCourseImage" required />
+                        <br />
+                        <br />
+                    </div>
+                </form>
+                <div class="col-xs-0 col-sm-3"></div>
+            </div><!--<div ng-show="addNewCourse" class="row">-->
+
+
+
+            <!--update data pages-->
+
+            <!--specific student update page -->
+            <div ng-show="EditStudent">
+                <form class="form-group" action="http://localhost/Project4/php/API.php?command=updateStudent" method="post" enctype="multipart/form-data">
+                    <div class="col-xs-12">
+                        <input ng-show="submitUpdateForm" type="submit" value="save" class="pull-left" />
+                        <input type="button" value="delete" class="pull-right" ng-click="deleteStudent(selectedStudentToEdit.user_id)" />
+                    </div>
+                    <br />
+                    <br />
+                    <div class="col-xs-0 col-sm-3"></div>
+                    <div class="col-xs-12 col-sm-6 divNeedTextCenter">
+                        <input type="text" name="user_id" ng-model="selectedStudentToEdit.user_id" ng-show="false" />
+                        <label>First Name : </label>
+                        <input type="text" class="form-control" placeholder="ugi" name="firstName" ng-model="selectedStudentToEdit.firstName" />
+                        <br />
+                        <label>Last Name : </label>
+                        <input type="text" class="form-control" placeholder="fletzet" name="lastName" ng-model="selectedStudentToEdit.lastName" />
+                        <br />
+                        <!--enter phone input and validation-->
+                        <label>Phone : </label>
+                        <input ng-hide="PhoneIsGoodUpdateForm" type="text" class="form-control" placeholder="05-xxxxxxxx" name="phone" ng-model="selectedStudentToEdit.phone" />
+                        <br />
+                        <a class=" btn btn-success" ng-hide="PhoneIsGoodUpdateForm" ng-click="checkPhoneAvailableUpdateForm()">check if Phone available</a>
+                        <p ng-show="noPhoneUpdateForm" class="PNeedRedColor">please enter a  Phone Number</p>
+                        <p ng-show="PhoneIsInvalidUpdateForm" class="PNeedRedColor">Phone is invalid</p>
+                        <p ng-show="PhoneIsNotAvailableUpdateForm" class=" PNeedRedColor">Phone is already in use</p>
+                        <p ng-show="PhoneIsGoodUpdateForm">{{selectedStudentToEdit.phone}}</p>
+                        <p ng-show="PhoneIsGoodUpdateForm" class="fa checkSquare">&#xf046</p>
+                        <br />
+                        <br />
+                        <!--enter E-mail input and validation-->
+                        <label>E-mail : </label>
+                        <input ng-hide="EmailIsGoodUpdateForm" type="email" class="form-control" placeholder="XX@XX.XX" name="email" ng-model="selectedStudentToEdit.email" />
+                        <br />
+                        <a class="btn btn-success" ng-hide="EmailIsGoodUpdateForm" ng-click="checkEmailAvailableForUpdateForm()">check if Email available</a>
+                        <p ng-show="noEmailUpdateForm" class="PNeedRedColor">please enter E-mail address</p>
+                        <p ng-show="EmailIsInvalidUpdateForm" class="PNeedRedColor">Email is invalid</p>
+                        <p ng-show="EmailIsNotAvailableUpdateForm" class="PNeedRedColor">Email is to not available</p>
+                        <p ng-show="EmailIsGoodUpdateForm">{{selectedStudentToEdit.email}}</p>
+                        <p ng-show="EmailIsGoodUpdateForm" class="fa checkSquare">&#xf046</p>
+                        <br />
+                        <br />
+                        <br />
+                        <label>Image : </label>
+                        <br />
+                        <div class="cotainImage">
+                            <img class="image" alt="Avatar" id="imageUpdateForm" ng-src="./image/users/{{selectedStudentToEdit.imageFileText}}" width="100" height="100" />
+                            <div class="overlay" ng-click="changeImageUpdateForm()">
+                                <div class="text">Change Image</div>
+                            </div>
+                        </div>
+                        <input type="file" id="my_file" name="file" accept="image/x-png,image/gif,image/jpeg">
+                        <br />
+                        <br />
+                        <!--list of the courses that user can pock the courses that the student take a prat in -->
+                        <h3>courses :</h3>
+                        <br />
+                        <div ng-repeat="course in courses">
+                            <div class="row">
+                                <input class="col-xs-1" id="{{course.course_id}}" type="checkbox" ng-checked="checkIfStudentTakeCourse(course.name)" value="{{course.course_id}}" name="check_list[]" />
+                                <label class="col-xs-2" for="{{course.course_id}}">{{course.name}}</label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div><!--<div ng-show="EditNewStudent">-->
+
+            <!--specific course Update page -->
+            <div ng-show="updateCoursePage" class="row">
+                <form class="form-group" action="http://localhost/Project4/php/API.php?command=updateCourse" method="post" enctype="multipart/form-data">
+                    <div class="col-xs-12">
+                        <input type="submit" value="save" class="pull-left"/>
+                        <input type="button" value="delete" class="pull-right" ng-click="deleteCourse(selectedCourseDetails.course_id)" />
+                    </div>
+                    <br />
+                    <br />
+                    <div class="col-xs-0 col-sm-3"></div>
+                    <div class="col-xs-12 col-sm-6">
+                        <input type="text" name="course_id" ng-model="selectedCourseDetails.course_id" ng-show="false" />
+                        <label>course Name : </label>
+                        <input type="text" class="form-control" name="name" placeholder="course name" ng-model="selectedCourseDetails.name" required />
+                        <br />
+                        <label>description : </label>
+                        <textarea class="form-control" name="description" rows="5" ng-model="selectedCourseDetails.description" required></textarea>
+                        <br />
+                        <!--current image of user and input to upload a new image -->
+                        <div class="cotainImage">
+                            <img class="image" alt="Avatar" id="imageUpdateCourseForm" ng-src="./image/courses/{{selectedCourseDetails.imageFileName}}" width="100" height="100" />
+                            <div class="overlay" ng-click="changeImageUpdateCourseForm()">
+                                <div class="text">Change Image</div>
+                            </div>
+                        </div>
+                        <input type="file" id="my_fileUpdateCourseForm" name="file" accept="image/x-png,image/gif,image/jpeg">
+                        <br />
+                        <!--number of student take this course -->
+                        <h3>total {{selectedCourseDetails.numberOfStudent}} Student taking this course</h3>
+                    </div>
+                </form>
+
+                <div class="col-xs-0 col-sm-3"></div>
+            </div><!--<div ng-show="addNewCourse" class="row">-->
+
+        </div>
+    </div>
+</content>
+
+
+

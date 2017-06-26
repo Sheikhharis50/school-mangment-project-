@@ -1,0 +1,202 @@
+<!--navbar -->
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Menu</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="http://localhost/Project4/index.php#!/school">school</a></li>
+                <li ng-show="isManger"><a ng-href="http://localhost/Project4/index.php#!/administration">administration</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="logOutNav">
+                    <p>{{user.firstName}} {{user.lastName}},&nbsp;{{user.role}}</p>
+                    <button class="pull-right" ng-click="logout()">log-out</button>
+                </li>
+                <li>
+                    <img src="./image/users/{{user.imageFileText}}" height="50" width="50" id="userImage">
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+<content>
+
+    <div class="row">
+
+        <!--left part of the screen (mangers list)-->
+        <div id="lefttCotentDivSchool" class="col-xs-12 col-sm-4  pull-left row">
+            <div class="col-xs-12 row">
+                <!--mangers header-->
+                <div class="divNeedTextCenter">
+                    <span>Mangers</span>
+                    <a ng-show="isManger" ng-click="openNewMangerForm()"><button class="fa fa-plus-square btnWithImage"></button></a>
+                    <hr />
+                </div>
+                <!--mangers list-->
+                <div ng-repeat="manger in mangers">
+                    <div class="row divSelectBox" ng-click="openMangerDetailsDivFunc(manger)">
+                        <div class="col-xs-4">
+                            <img ng-src="./image/users/{{manger.imageFileText}}" width="50" height="50" />
+                        </div>
+                        <div class="col-xs-8 ">
+                            <span>{{manger.firstName}}</span>
+                            <span>{{manger.lastName}}</span>
+                            <p>{{manger.phone}}</p>
+                        </div>
+                    </div>
+                </div><!-- <div ng-repeat="manger in mangers">-->
+            </div>
+        </div><!--<div id="lefttCotentDivSchool" class="col-xs-12 col-sm-4  pull-left row">-->
+
+
+
+        <!--right content part-->
+        <div id="rightCotentDivSchool" class="col-xs-12 col-sm-8">
+            <br />
+            <br />
+            
+            <!--specific manger page -->
+            <div ng-show="mangerDetailsDiv" class="row">
+                <div class="col-xs-12">
+                    <!--check if is a manger that can update data-->
+                    <input ng-show="isManger" class="pull-right" type="submit" value="EDIT" ng-click="EditExistMangerFunc()" />
+                </div>
+                <br />
+                <br />
+                <!--div that contain student information-->
+                <div class="col-xs-12">
+                    <div class="col-xs-2 pull-left">
+                        <img ng-src="./image/users/{{selectedManger.imageFileText}}" width="100" height="100" />
+                    </div>
+                    <div class="col-xs-6 pull-left">
+                        <h5> name : {{selectedManger.firstName}} {{selectedManger.lastName}}</h5>
+                        <p> E-mail : {{selectedManger.email}}</p>
+                        <p> Phone : {{selectedManger.phone}}</p>
+                    </div>
+                    <div class="col-xs-4">
+                    </div>
+                </div>
+            </div><!--<div ng-show="studentSelectedDiv" class="row">-->
+
+            <!--specific manger update page -->
+            <div ng-show="EditManger">
+                <form class="form-group" action="http://localhost/Project4/php/API.php?command=updateManger" method="post" enctype="multipart/form-data">
+                    <div class="col-xs-12">
+                        <input ng-show="submitUpdateForm" type="submit" value="save" class="pull-left" />
+                        <input type="button" value="delete" class="pull-right" ng-click="deleteMenger()" />
+                    </div>
+                    <br />
+                    <br />
+                    <div class="col-xs-0 col-sm-3"></div>
+                    <div class="col-xs-12 col-sm-6 divNeedTextCenter">
+                        <input type="text" name="user_id" ng-model="selectedManger.user_id" ng-show="false" />
+                        <label>First Name : </label>
+                        <input type="text" class="form-control" placeholder="ugi" name="firstName" ng-model="selectedManger.firstName" />
+                        <br />
+                        <label>Last Name : </label>
+                        <input type="text" class="form-control" placeholder="fletzet" name="lastName" ng-model="selectedManger.lastName" />
+                        <br />
+                        <!--enter phone input and validation-->
+                        <label>Phone : </label>
+                        <input ng-hide="PhoneIsGoodUpdateForm" type="text" class="form-control" placeholder="05-xxxxxxxx" name="phone" ng-model="selectedManger.phone" />
+                        <br />
+                        <a class=" btn btn-success" ng-hide="PhoneIsGoodUpdateForm" ng-click="checkPhoneAvailableUpdateForm()">check if Phone available</a>
+                        <p ng-show="noPhoneUpdateForm" class="PNeedRedColor">please enter a  Phone Number</p>
+                        <p ng-show="PhoneIsInvalidUpdateForm" class="PNeedRedColor">Phone is invalid</p>
+                        <p ng-show="PhoneIsNotAvailableUpdateForm" class=" PNeedRedColor">Phone is already in use</p>
+                        <p ng-show="PhoneIsGoodUpdateForm">{{selectedStudentToEdit.phone}}</p>
+                        <p ng-show="PhoneIsGoodUpdateForm" class="fa checkSquare">&#xf046</p>
+                        <br />
+                        <br />
+                        <!--enter E-mail input and validation-->
+                        <label>E-mail : </label>
+                        <input ng-hide="EmailIsGoodUpdateForm" type="email" class="form-control" placeholder="XX@XX.XX" name="email" ng-model="selectedManger.email" />
+                        <br />
+                        <a class="btn btn-success" ng-hide="EmailIsGoodUpdateForm" ng-click="checkEmailAvailableForUpdateForm()">check if Email available</a>
+                        <p ng-show="noEmailUpdateForm" class="PNeedRedColor">please enter E-mail address</p>
+                        <p ng-show="EmailIsInvalidUpdateForm" class="PNeedRedColor">Email is invalid</p>
+                        <p ng-show="EmailIsNotAvailableUpdateForm" class="PNeedRedColor">Email is to not available</p>
+                        <p ng-show="EmailIsGoodUpdateForm">{{selectedStudentToEdit.email}}</p>
+                        <p ng-show="EmailIsGoodUpdateForm" class="fa checkSquare">&#xf046</p>
+                        <br />
+                        <br />
+                        <br />
+                        <label>Image : </label>
+                        <br />
+                        <div class="cotainImage">
+                            <img class="image" alt="Avatar" id="imageUpdateForm" ng-src="./image/users/{{selectedManger.imageFileText}}" width="100" height="100" />
+                            <div class="overlay" ng-click="changeImageUpdateForm()">
+                                <div class="text">Change Image</div>
+                            </div>
+                        </div>
+                        <input type="file" id="my_file" name="file" accept="image/x-png,image/gif,image/jpeg">
+                        <br />
+                        <br />
+                    </div>
+                </form>
+            </div><!--<div ng-show="EditNewStudent">-->
+            
+            <!--ADD new manger page-->
+            <div ng-show="addNewManger" class="row">
+                <form class="form-group" action="http://localhost/Project4/php/API.php?command=insertNewManger" method="post" enctype="multipart/form-data">
+                    <div class="col-xs-12">
+                        <!--check if form is ready to send -->
+                        <input type="submit" value="save" ng-show="readyToAddNewStudentNewStudentForm" />
+                    </div>
+                    <br />
+                    <br />
+                    <div class="col-xs-0 col-sm-3"></div>
+                    <div class="col-xs-12 col-sm-6 divNeedTextCenter">
+                        <label>First Name : </label>
+                        <input type="text" class="form-control" placeholder="israel" name="firstName" />
+                        <br />
+                        <label>Last Name : </label>
+                        <input type="text" class="form-control" placeholder="israeli" name="lastName" />
+                        <br />
+                        <!--enter phone input and validation-->
+                        <label>Phone : </label>
+                        <input ng-hide="PhoneIsGoodNewMangerForm" type="phone" class="form-control" placeholder="05-xxxxxxxx" name="phone" ng-model="newMangerPhone" />
+                        <a class=" btn btn-success" ng-hide="PhoneIsGoodNewMangerForm" ng-click="checkPhoneAvailableNewMangerForm()">check if Phone available</a>
+                        <p ng-show="noPhoneNewMangerForm" class="PNeedRedColor">please enter a  Phone Number</p>
+                        <p ng-show="PhoneIsInvalidNewMangerForm" class="PNeedRedColor">Phone is invalid</p>
+                        <p ng-show="PhoneIsNotAvailableNewMangerForm" class=" PNeedRedColor">Phone is already in use</p>
+                        <p ng-show="PhoneIsGoodNewMangerForm">{{newMangerPhone}}</p>
+                        <p ng-show="PhoneIsGoodNewMangerForm" class="fa checkSquare">&#xf046</p>
+                        <br />
+                        <!--enter E-mail input and validation-->
+                        <label>E-mail : </label>
+                        <input ng-hide="EmailIsGoodNewMangerForm" type="email" class="form-control" placeholder="XXXX@XXXX.XXX" name="email" ng-model="newMangerEmail" />
+                        <a class="btn btn-success" ng-hide="EmailIsGoodNewMangerForm" ng-click="checkEmailAvailableForNewMangerForm()">check if Email available</a>
+                        <p ng-show="noEmailNewMangerForm" class="PNeedRedColor">please enter E-mail address</p>
+                        <p ng-show="EmailIsInvalidNewMangerForm" class="PNeedRedColor">Email is invalid</p>
+                        <p ng-show="EmailIsNotAvailableNewMangerForm" class="PNeedRedColor">Email is to not available</p>
+                        <p ng-show="EmailIsGoodNewMangerForm">{{newMangerEmail}}</p>
+                        <p ng-show="EmailIsGoodNewMangerForm" class="fa checkSquare">&#xf046</p>
+                        <br />
+
+                        <label>Password : </label>
+                        <input type="password" class="form-control" placeholder="XXXXXX" name="password" pattern=".{6,}" title="the password shuld be at least 6 characters" ng-model="newstudent.password" />
+                        <br />
+
+                        <label>Image : </label>
+                        <input type="file" class="form-control" name="file" accept="image/x-png,image/gif,image/jpeg" required />
+                        <br />
+                        <br />
+                    </div>
+                </form>
+            </div><!-- <div ng-show="addNewStudent" class="row">-->
+
+        </div>
+    </div>
+</content>
+
